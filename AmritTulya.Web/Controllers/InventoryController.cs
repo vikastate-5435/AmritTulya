@@ -148,10 +148,10 @@ namespace AmritTulya.Web.Controllers
                     byte[] content = Encoding.ASCII.GetBytes(json);
                     var bytes = new ByteArrayContent(content);
 
-                    _oApiResponse = _oApiRepository.APICommunication(string.Format(url), HttpMethod.Put, bytes, HomeController.token);
+                    _oApiResponse = _oApiRepository.APICommunication(string.Format(url + obj.Id), HttpMethod.Put, bytes, HomeController.token);
 
                     msg = "Saved Successfully";
-                    
+
                     //db.Entry(obj).State = EntityState.Modified;
                     //db.SaveChanges();
                     //msg = "Saved Successfully";
@@ -221,19 +221,14 @@ namespace AmritTulya.Web.Controllers
         public string Delete(int Id)
         {
             string url = "api/Inventories/DeleteProduct/";
-
-            //Inventory list = db.Inventories.Find(Id);
-            //db.Inventories.Remove(list);
-            //db.SaveChanges();
-            //return "Deleted successfully";
-
+            
             try
             {
                 _oApiRepository = new APIRepository(_oConfiguration);
                 _oApiResponse = new APICommunicationResponseModel<string>();
 
                 _oApiResponse = _oApiRepository.APICommunication(string.Format(url + Id), HttpMethod.Delete, null, _sToken);
-                    return "Deleted successfully";
+                return "Deleted successfully";
             }
             catch (Exception e)
             {

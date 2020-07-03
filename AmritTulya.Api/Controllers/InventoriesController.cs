@@ -38,9 +38,10 @@ namespace AmritTulya.Api.Controllers
         }
 
         // PUT: api/Inventories/5
-        [Route("api/Inventories/UpdateProduct/")]
+        [HttpPut]
+        [Route("api/Inventories/UpdateProduct/{id}")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutInventory(Inventory inventory)
+        public IHttpActionResult PutInventory(int id,Inventory inventory)
         {
             if (!ModelState.IsValid)
             {
