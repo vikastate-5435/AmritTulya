@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 
 namespace AmritTulya.Web.Controllers
 {
+    [Authorize]
     public class InventoryController : Controller
     {
 
@@ -35,6 +36,8 @@ namespace AmritTulya.Web.Controllers
         public InventoryController(IConfiguration configuration)
         {
             _sToken = HomeController.token;
+            var claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
+
             _oConfiguration = configuration;
         }
 
@@ -71,7 +74,7 @@ namespace AmritTulya.Web.Controllers
                 a.Name,
                 a.Description,
                 a.Price,
-                a.InventoryImage
+                a.ImagePath
 
             });
             int totalRecords = Results.Count();
@@ -117,9 +120,6 @@ namespace AmritTulya.Web.Controllers
                     _oApiResponse = _oApiRepository.APICommunication(url, HttpMethod.Post, bytes, _sToken);
 
                     msg = "Saved Successfully";
-                    //db.Inventories.Add(obj);
-                    //db.SaveChanges();
-                    //msg = "Saved Successfully";
                 }
                 else
                 {
@@ -140,21 +140,17 @@ namespace AmritTulya.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
+                    int id = obj.Id;
                     _oApiRepository = new APIRepository(_oConfiguration);
                     _oApiResponse = new APICommunicationResponseModel<string>();
+
                     var json = JsonConvert.SerializeObject(obj, Formatting.Indented).ToString();
 
                     byte[] content = Encoding.ASCII.GetBytes(json);
                     var bytes = new ByteArrayContent(content);
-
-                    _oApiResponse = _oApiRepository.APICommunication(string.Format(url + obj.Id), HttpMethod.Put, bytes, HomeController.token);
+                    _oApiResponse = _oApiRepository.APICommunication(url, HttpMethod.Post, bytes, _sToken);
 
                     msg = "Saved Successfully";
-
-                    //db.Entry(obj).State = EntityState.Modified;
-                    //db.SaveChanges();
-                    //msg = "Saved Successfully";
                 }
                 else
                 {
@@ -169,59 +165,69 @@ namespace AmritTulya.Web.Controllers
         }
 
         #region Upload Images
-        [HttpPost]
-        public JsonResult UploadImage(int id, HttpPostedFileBase InventoryImage)
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult UploadImage(int id)
         {
-            var _Id = Request["Id"];
-            var _InventoryImage = Request["InventoryImage"];
-            string directory = "~/Images/";
-
-            if (InventoryImage != null && InventoryImage.ContentLength > 0)
-            {
-                var fileName = System.IO.Path.GetFileName(InventoryImage.FileName);
-                InventoryImage.SaveAs(Server.MapPath(System.IO.Path.Combine(directory, fileName)));
-                //ProductImage.SaveAs(Path.Combine(directory, fileName));
-            }
-
-
+            url = "api/Inventories/UpdateImage/";
+            string msg = string.Empty;
             string _imgname = string.Empty;
             if (System.Web.HttpContext.Current.Request.Files.AllKeys.Any())
             {
                 var pic = System.Web.HttpContext.Current.Request.Files["MyImages"];
+                byte[] imagebyte;
+                Inventory obj = new Inventory();
+
                 if (pic.ContentLength > 0)
                 {
-                    var fileName = System.IO.Path.GetFileName(pic.FileName);
-                    var _ext = System.IO.Path.GetExtension(pic.FileName);
+                    var fileName = Path.GetFileName(pic.FileName);
+                    var _ext = Path.GetExtension(pic.FileName);
 
                     _imgname = Guid.NewGuid().ToString();
-                    var _comPath = Server.MapPath("/Images") + _imgname + _ext;
-                    _imgname = "Inv" + _imgname + _ext;
+                    //   var _comPath = Server.MapPath("~/Content/UploadImages/") + _imgname + _ext;
+                    _imgname = _imgname + _ext;
 
-                    ViewBag.Msg = _comPath;
-                    var path = _comPath;
 
-                    // Saving Image in Original Mode
-                    pic.SaveAs(path);
-
-                    // resizing image
-                    MemoryStream ms = new MemoryStream();
-                    WebImage img = new WebImage(_comPath);
-
-                    if (img.Width > 200)
-                        img.Resize(200, 200);
-                    img.Save(_comPath);
+                    pic.SaveAs(Server.MapPath("~/Content/UploadImages/" + _imgname));
+                    BinaryReader reader = new BinaryReader(pic.InputStream);
+                    imagebyte = reader.ReadBytes(pic.ContentLength);
+                    obj.Id = id;
+                    obj.InventoryImage = imagebyte;
+                    obj.ImagePath = _imgname;
+                    //ViewBag.Msg = _comPath;
+                    //var path = _comPath;
+                    //// Saving Image in Original Mode
+                    //pic.SaveAs(path);
+                    //// resizing image
+                    //MemoryStream ms = new MemoryStream();
+                    //WebImage img = new WebImage(_comPath);
+                    //if (img.Width > 200)
+                    //    img.Resize(200, 200);
+                    //img.Save(_comPath);
                     // end resize
                 }
-            }
 
-            return Json(new { isUploaded = true, message = "Uploaded Successfully" }, "text/html");
+
+                _oApiRepository = new APIRepository(_oConfiguration);
+                _oApiResponse = new APICommunicationResponseModel<string>();
+
+                var json = JsonConvert.SerializeObject(obj, Formatting.Indented).ToString();
+
+                byte[] content = Encoding.ASCII.GetBytes(json);
+                var bytes = new ByteArrayContent(content);
+                _oApiResponse = _oApiRepository.APICommunication(url, HttpMethod.Post, bytes, _sToken);
+
+                msg = "Saved Successfully";
+
+
+            }
+            return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
         public string Delete(int Id)
         {
             string url = "api/Inventories/DeleteProduct/";
-            
+
             try
             {
                 _oApiRepository = new APIRepository(_oConfiguration);

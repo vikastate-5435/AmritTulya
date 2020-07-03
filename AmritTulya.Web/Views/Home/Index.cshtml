@@ -1,4 +1,7 @@
-﻿@{
+﻿@model IEnumerable<AmritTulya.EntityLayer.Inventory>
+
+
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -13,32 +16,31 @@
         <li data-target="#myCarousel" data-slide-to="5"></li>
 
     </ol>
-
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
 
         <div class="item active">
-            <img src="~/Content/Slider Images/TeaCup.jpg" style="height:395px !important; width:100% !important" alt="image 2">
+            <img src="~/Content/Slider Images/Slider0.jpg" style="height:395px !important; width:100% !important" alt="image 2">
         </div>
 
         <div class="item">
-            <img src="~/Content/Slider Images/Idli Dosa.jpg" style="height:395px !important; width:100% !important" alt="image 1">
+            <img src="~/Content/Slider Images/Slider1.jpg" style="height:395px !important; width:100% !important" alt="image 1">
         </div>
 
         <div class="item">
-            <img src="~/Content/Slider Images/Poha.jpg" style="height:395px !important; width:100% !important" alt="image 3">
+            <img src="~/Content/Slider Images/Slider2.jpg" style="height:395px !important; width:100% !important" alt="image 3">
         </div>
 
         <div class="item">
-            <img src="~/Content/Slider Images/Idli.jpg" style="height:395px !important; width:100% !important" alt="image 1">
+            <img src="~/Content/Slider Images/Slider3.jpg" style="height:395px !important; width:100% !important" alt="image 1">
         </div>
 
         <div class="item">
-            <img src="~/Content/Slider Images/Upma.jpg" style="height:395px !important; width:100% !important" alt="image 2">
+            <img src="~/Content/Slider Images/Poha.jpg" style="height:395px !important; width:100% !important" alt="image 2">
         </div>
 
         <div class="item">
-            <img src="~/Content/Slider Images/VadaPav.jpg" style="height:395px !important; width:100% !important" alt="image 3">
+            <img src="~/Content/Slider Images/TeaCup.jpg" style="height:395px !important; width:100% !important" alt="image 3">
         </div>
     </div>
 
@@ -52,3 +54,49 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
+
+
+<table class="table table-responsive table-condensed">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>DESCRIPTION</th>
+            <th>PRICE</th>
+            <th>PHOTO</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+
+            foreach (var item in Model)
+            {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Description</td>
+            <td>@item.Price</td>
+            <td>
+                @if (item.InventoryImage != null)
+                {
+                    <img style="height:100px !important;width:150px !important" src="~/Content/UploadImages/@(item.ImagePath)" />
+                }
+            </td>
+         </tr>
+
+            }
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+

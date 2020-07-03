@@ -2,7 +2,7 @@
     //    debugger;
 
     $.fn.fmatter.imageFormatter = function (cellvalue, options, rowObject) {
-        return "<img src='/Shared/AuftragDBImage?id=" + cellvalue + "'/>";
+        return "<img src='~/Content/UploadImages/" + cellvalue + "'/>";
     };
 
 
@@ -12,7 +12,7 @@
             datatype: 'json',
             mtype: 'Get',
             //table header name
-            colNames: ['Id', 'Name', 'Description', 'Price', 'InventoryImage'],
+            colNames: ['Id', 'Name', 'Description', 'Price', 'Image'],
             //colModel takes the data from controller and binds to grid   
             colModel: [
                 {
@@ -31,28 +31,30 @@
                     name: 'Description',
                     index: 'Description',
                     editable: true,
-                    multiline: true
+                    multiline: true,
+                    height: '60px'
 
                 }, {
                     key: false,
                     name: 'Price',
                     index: 'Price',
-                    editable: true
-                }, {
-                    name: "InventoryImage",
-                    index: "InventoryImage",
-                    mtype: "Post",
+                    editable: true,
+                    align : 'center'
+                },
+                {
+                    name: "ImagePath",
+                    index: "ImagePath",
                     editable: true,
                     editrules: { required: true },
                     edittype: "file",
-                    search: true,
+                    search: false,
                     resizable: false,
                     width: 210,
-                    align: "left",
+                    align: "center",
                     editoptions: {
                         enctype: "multipart/form-data"
-                    }
-
+                    },
+                    formatter: imageFormat
                 }
             ],
 
@@ -90,7 +92,7 @@
                 closeOnEscape: true,
                 closeAfterEdit: true,
                 recreateForm: true,
-               // afterSubmit: uploadImage,
+                afterSubmit: uploadImage,
                 afterComplete: function (response) {
                     if (response.responseText) {
                         alert(response.responseText);
@@ -102,12 +104,10 @@
                 url: "/Inventory/Create",
                 closeOnEscape: true,
                 closeAfterAdd: true,
-                //  afterSubmit: uploadImage,
+                afterSubmit: uploadImage,
                 afterComplete: function (response) {
                     if (response.responseText) {
                         if (response.responseText == "Saved Successfully") {
-                            var data = response.responseText;
-                    // alert(data.id);
                             alert(response.responseText);
                         }
                     }
@@ -127,27 +127,14 @@
                 }
             });
 
-    $("#InventoryImage").change(function () {
-
-        var imagefilepath = $(this).val();
-        if (this.files && this.files[0]) {
-            var obj = new FileReader();
-            obj.onload = function (data) {
-                var image = document.getElementById("image");
-
-                image.src = data.target.result;
-                image.style.display = "block";
-
-            }
-            obj.readAsDataURL(this.files[0]);
-        }
-    })
-
 });
 
 
 function imageFormat(cellvalue, options, rowObject) {
-    return '<img src="' + cellvalue + '" />';
+    if (cellvalue != null) {
+        return '<img src="Content/UploadImages/' + cellvalue + '" style="height:75px !important;width:200px !important" />';
+    }
+    return '<img src="#" style="height:0px !important;width:0px !important" />';
 }
 function imageUnFormat(cellvalue, options, cell) {
     return $('img', cell).attr('src');
@@ -155,65 +142,52 @@ function imageUnFormat(cellvalue, options, cell) {
 
 
 
+//function uploadImage(response, postdata) {
+//    if (response.statusText == "OK") {
+//        if ($("#ImagePath").val() != "") {
+//           var result= ajaxFileUpload(postdata.Id);
+//        }
+//        else {
+//            return "Added successfully";
+//        }
+//    }
+//}
+
 function uploadImage(response, postdata) {
-    debugger;
+    //debugger;
     //var json = $.parseJSON(response.responseText);
     //if (json) return [json.success, json.message, json.id];
     //return [false, "Failed to get result from server.", null];
-
+    debugger;
     //var data = $.parseJSON(response.responseText);
 
-    if (response.statusText == "OK") {
-        if ($("#InventoryImage").val() != "") {
+    if (response.status == 200) {
+        if ($("#ImagePath").val() != "") {
             ajaxFileUpload(postdata.Id);
         }
     }
-
-    return [data.success, data.message, data.id];
+    return [response.status, response.responseText, postdata.Id];
 }
 
 function ajaxFileUpload(id) {
+    var data = new FormData();
+    var files = $("#ImagePath").get(0).files;
+   //if (files.length > 0) {
+        data.append("MyImages", files[0]);
+   //}
 
-    var formData = new FormData();
-    var files = $("#InventoryImage").get(0).files;
-    if (files.length > 0) {
-        formData.append("MyImages", files[0]);
-    }
-    formData.append("Id", id);
+    $.ajax({
+        url: "/Inventory/UploadImage?id=" + id,
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data: data,
+        success: function (response) {
+            return response;
+          },
+        //error: function (er) {
+        //    alert(er);
+        //}
 
-
-    debugger;
-    var imageData = JSON.stringify({
-        'Id': id,
-        'InventoryImage': files
     });
-
-    debugger;
-    $.ajax(
-        {
-            type: "POST",
-            url: "/Inventory/UploadImage?id=" + id + "InventoryImage=" + files,
-            secureuri: false,
-            fileElementId: 'InventoryImage',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify({ formData }),
-            success: function (response, status) {
-                alert('hiii');
-                debugger;
-                if (typeof (response.error) != 'undefined') {
-                    if (response.error != '') {
-                        alert(response.error);
-                    } else {
-                        alert(response.msg);
-                    }
-                }
-            },
-            error: function (response, status, e) {
-                alert(e);
-            }
-        }
-    )
-
-    //return false;
 }

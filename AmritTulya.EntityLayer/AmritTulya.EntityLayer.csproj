@@ -69,6 +69,10 @@
     <Compile Include="Migrations\202006300933473_Nothing Change.Designer.cs">
       <DependentUpon>202006300933473_Nothing Change.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007031014004_Nothing Change12.cs" />
+    <Compile Include="Migrations\202007031014004_Nothing Change12.Designer.cs">
+      <DependentUpon>202007031014004_Nothing Change12.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="UsersEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +87,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006300933473_Nothing Change.resx">
       <DependentUpon>202006300933473_Nothing Change.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007031014004_Nothing Change12.resx">
+      <DependentUpon>202007031014004_Nothing Change12.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

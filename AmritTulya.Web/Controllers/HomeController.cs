@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Xml;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace AmritTulya.Web.Controllers
 {
@@ -21,20 +22,40 @@ namespace AmritTulya.Web.Controllers
         private readonly IConfiguration _oConfiguration;
         private APICommunicationResponseModel<string> _oApiResponse;
         private APIRepository _oApiRepository;
+
+        string sFilterData = string.Empty, sJson = string.Empty;
+        List<Inventory> sResponse = new List<Inventory>();
+        string url = string.Empty;
         public static string token = string.Empty;
+
+
         public HomeController()
         {
-
-
         }
         public HomeController(IConfiguration oConfiguration)
         {
             _oConfiguration = oConfiguration;
-
         }
         public ActionResult Index()
         {
-            return View();
+            url = "api/Inventories/GetProducts";
+            var claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
+            DataTableAjaxPostModel dModel = new DataTableAjaxPostModel();
+            sJson = JsonConvert.SerializeObject(dModel, Formatting.Indented).ToString();
+            byte[] bContent = Encoding.ASCII.GetBytes(sJson);
+            var sBytes = new ByteArrayContent(bContent);
+
+            _oApiRepository = new APIRepository(_oConfiguration);
+            _oApiResponse = new APICommunicationResponseModel<string>();
+            _oApiResponse = _oApiRepository.APICommunication(url, System.Net.Http.HttpMethod.Get, sBytes, HomeController.token);
+
+            if (_oApiResponse.statusCode == HttpStatusCode.OK)
+            {
+                sFilterData = _oApiResponse.data;
+                sResponse = JsonConvert.DeserializeObject<List<Inventory>>(sFilterData);
+            }
+
+            return View(sResponse);
         }
 
 
@@ -76,7 +97,7 @@ namespace AmritTulya.Web.Controllers
                         {
                         new Claim(ClaimTypes.NameIdentifier, "token"),
                         new Claim(ClaimTypes.Authentication, oResponse.token)
-                        };
+                    };
                         token = oResponse.token;
 
                         FormsAuthentication.SetAuthCookie(oResponse.Username, true);
@@ -84,10 +105,10 @@ namespace AmritTulya.Web.Controllers
                         HttpCookie tokenCookie = new HttpCookie(token);
                         string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                         var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-                     
+
                         HttpContext.Response.Cookies.Add(authCookie);
 
-                        return RedirectToAction("Index","Inventory",null);
+                        return RedirectToAction("Index", "Inventory", null);
 
                     }
                     else

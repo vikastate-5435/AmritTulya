@@ -168,6 +168,10 @@
     <Content Include="Content\Slider Images\Idli Dosa.jpg" />
     <Content Include="Content\Slider Images\Idli.jpg" />
     <Content Include="Content\Slider Images\Poha.jpg" />
+    <Content Include="Content\Slider Images\Slider0.jpg" />
+    <Content Include="Content\Slider Images\Slider1.jpg" />
+    <Content Include="Content\Slider Images\Slider2.jpg" />
+    <Content Include="Content\Slider Images\Slider3.jpg" />
     <Content Include="Content\Slider Images\TeaCup.jpg" />
     <Content Include="Content\Slider Images\Upma.jpg" />
     <Content Include="Content\Slider Images\VadaPav.jpg" />
@@ -343,6 +347,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\UploadImages\" />
     <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>

@@ -38,10 +38,10 @@ namespace AmritTulya.Api.Controllers
         }
 
         // PUT: api/Inventories/5
-        [HttpPut]
-        [Route("api/Inventories/UpdateProduct/{id}")]
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutInventory(int id,Inventory inventory)
+        [HttpPost,Route("api/Inventories/UpdateProduct/")]
+        //[ResponseType(typeof(void))]
+        [ResponseType(typeof(Inventory))]
+        public IHttpActionResult PutInventory(Inventory inventory)
         {
             if (!ModelState.IsValid)
             {
@@ -65,14 +65,57 @@ namespace AmritTulya.Api.Controllers
                 {
                     return NotFound();
                 }
+                    else
+                {
+                    throw;
+                }
+            }
+            return Ok(inventory);
+        }
+
+
+        // PUT: api/Inventories/5
+        [HttpPost, Route("api/Inventories/UpdateImage/")]
+        //[ResponseType(typeof(void))]
+        [ResponseType(typeof(Inventory))]
+        public IHttpActionResult UpdateImage(Inventory inventory)
+        {
+            if (inventory.Id != inventory.Id)
+            {
+                return BadRequest();
+            }
+
+            Inventory invObj = db.Inventories.Find(inventory.Id);
+
+           // invObj.Id = invObj.Id;
+            invObj.Name = invObj.Name;
+            invObj.IsDeleted = invObj.IsDeleted;
+            invObj.Price = invObj.Price;
+            invObj.InventoryImage = inventory.InventoryImage;
+            invObj.Description = invObj.Description;
+            invObj.ImagePath = inventory.ImagePath;
+
+            //db.Entry(inventory).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!InventoryExists(inventory.Id))
+                {
+                    return NotFound();
+                }
                 else
                 {
                     throw;
                 }
             }
+            return Ok(inventory);
 
-            return StatusCode(HttpStatusCode.NoContent);
         }
+
 
         // POST: api/Inventories
         [Route("api/Inventories/AddProduct")]
