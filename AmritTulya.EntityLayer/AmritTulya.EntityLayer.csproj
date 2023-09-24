@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AmritTulya.EntityLayer</RootNamespace>
     <AssemblyName>AmritTulya.EntityLayer</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,17 +62,9 @@
     <Compile Include="AmritTulyaContext.cs" />
     <Compile Include="DataTableAjaxPostModel.cs" />
     <Compile Include="Inventory.cs" />
-    <Compile Include="Migrations\202006290920001_DB Creation.cs" />
-    <Compile Include="Migrations\202006290920001_DB Creation.Designer.cs">
-      <DependentUpon>202006290920001_DB Creation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202006300933473_Nothing Change.cs" />
-    <Compile Include="Migrations\202006300933473_Nothing Change.Designer.cs">
-      <DependentUpon>202006300933473_Nothing Change.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007031014004_Nothing Change12.cs" />
-    <Compile Include="Migrations\202007031014004_Nothing Change12.Designer.cs">
-      <DependentUpon>202007031014004_Nothing Change12.cs</DependentUpon>
+    <Compile Include="Migrations\202008020611487_Db generations.cs" />
+    <Compile Include="Migrations\202008020611487_Db generations.Designer.cs">
+      <DependentUpon>202008020611487_Db generations.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="UsersEntity.cs" />
@@ -82,14 +75,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006290920001_DB Creation.resx">
-      <DependentUpon>202006290920001_DB Creation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006300933473_Nothing Change.resx">
-      <DependentUpon>202006300933473_Nothing Change.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007031014004_Nothing Change12.resx">
-      <DependentUpon>202007031014004_Nothing Change12.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202008020611487_Db generations.resx">
+      <DependentUpon>202008020611487_Db generations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

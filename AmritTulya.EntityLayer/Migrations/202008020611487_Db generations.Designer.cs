@@ -7,13 +7,13 @@ namespace AmritTulya.EntityLayer.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class DBCreation : IMigrationMetadata
+    public sealed partial class Dbgenerations : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DBCreation));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Dbgenerations));
         
         string IMigrationMetadata.Id
         {
-            get { return "202006290920001_DB Creation"; }
+            get { return "202008020611487_Db generations"; }
         }
         
         string IMigrationMetadata.Source

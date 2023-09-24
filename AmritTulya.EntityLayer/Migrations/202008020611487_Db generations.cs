@@ -3,7 +3,7 @@ namespace AmritTulya.EntityLayer.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class DBCreation : DbMigration
+    public partial class Dbgenerations : DbMigration
     {
         public override void Up()
         {
@@ -16,6 +16,7 @@ namespace AmritTulya.EntityLayer.Migrations
                         Description = c.String(maxLength: 500),
                         Price = c.Decimal(nullable: false, precision: 18, scale: 2),
                         InventoryImage = c.Binary(),
+                        ImagePath = c.String(),
                         IsDeleted = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
@@ -25,8 +26,9 @@ namespace AmritTulya.EntityLayer.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Username = c.String(),
-                        Password = c.String(),
+                        Username = c.String(nullable: false),
+                        Password = c.String(nullable: false),
+                        userRole = c.String(),
                         CreatedDate = c.DateTime(nullable: false),
                         LastLoginDate = c.DateTime(nullable: false),
                     })
